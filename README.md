@@ -15,6 +15,8 @@ RETCHER provides a step-by-step mode for running from input files to all
 results, as well as a pipeline for quick execution. For more information
 about the algorithm, please refer to the following publications:
 
+xxxxxxxxxxxxxxxx
+
 ## Installation
 
 The subclonal clustering part of RETCHER is based on
