@@ -828,21 +828,21 @@ saveTumorClusterRes <- function(clusterResult, saveDir) {
   }
 
   write.table(
-    cluster_res$mat,
+    clusterResult$mat,
     paste0(saveDir, "/cluster_res.tsv"),
     sep = "\t",
     row.names = F
   )
 
   write.table(
-    cluster_res$ci,
+    clusterResult$ci,
     paste0(saveDir, "/cluster_ci.tsv"),
     sep = "\t",
     row.names = F
   )
 
-  for (i in names(cluster_res$mutMulti)) {
-    df <- cluster_res$mutMulti[i]
+  for (i in names(clusterResult$mutMulti)) {
+    df <- clusterResult$mutMulti[i]
     write.table(
       df,
       paste0(saveDir, "/", i, "_mutMulti.tsv"),
