@@ -12,8 +12,7 @@ the tumor subclonal structure using the cancer cell fraction (CCF) of
 somatic mutations, infers clonal evolution trees, and constructs
 phylogenetic trees based on the presence of mutations in samples.
 RETCHER provides a step-by-step mode for running from input files to all
-results, as well as a pipeline for quick execution. For more information
-about the algorithm, please refer to the following publications:
+results, as well as a pipeline for quick execution.
 
 ## Installation
 
