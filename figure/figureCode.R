@@ -102,7 +102,6 @@ x$method <-
                     "lichee",
                     "pictograph"))
 
-x$prop[x$prop > 1] <- 1
 
 ggplot(x, aes(factor(clustNum), prop, fill = method)) +
   geom_boxplot(size = 0.7,
@@ -148,7 +147,6 @@ x$method <-
                     "lichee",
                     "pictograph"))
 
-x$prop[x$prop > 1] <- 1
 
 ggplot(x, aes(factor(clust), prop, fill = method)) +
   geom_boxplot(size = 0.7,
