@@ -102,7 +102,6 @@ x$method <-
                     "lichee",
                     "pictograph"))
 
-
 ggplot(x, aes(factor(clustNum), prop, fill = method)) +
   geom_boxplot(size = 0.7,
                width = 0.8,
@@ -146,7 +145,6 @@ x$method <-
                     "clonevol",
                     "lichee",
                     "pictograph"))
-
 
 ggplot(x, aes(factor(clust), prop, fill = method)) +
   geom_boxplot(size = 0.7,
