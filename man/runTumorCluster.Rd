@@ -13,7 +13,8 @@ runTumorCluster(
   maximumClusters = 10,
   useSexChrs = TRUE,
   bootstrapIter = 2000,
-  bootstrapConf = 0.95
+  bootstrapConf = 0.95,
+  usePercentage = FALSE
 )
 }
 \arguments{
@@ -42,6 +43,8 @@ mutations on the sex chromosomes are used in the clustering process. default is 
 \item{bootstrapIter}{The number of bootstrap iterations, default is 2000.}
 
 \item{bootstrapConf}{Confidence interval for bootstrap, default is 0.95.}
+
+\item{usePercentage}{Whether to multiply CCF by 100 to express percentage, default is FALSE.}
 }
 \value{
 Returns a list containing a data.frame of the clustering results,
