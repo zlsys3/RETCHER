@@ -4,10 +4,12 @@
 \alias{extractFromSC}
 \title{Extract the Required Columns From the SC}
 \usage{
-extractFromSC(sc)
+extractFromSC(sc, usePercentage = FALSE)
 }
 \arguments{
 \item{sc}{cluster result of sciclone.}
+
+\item{usePercentage}{Whether to multiply CCF by 100 to express percentage, default is FALSE.}
 }
 \description{
 Extract the Required Columns From the SC

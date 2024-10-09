@@ -53,7 +53,9 @@ runTumorCluster <-
     all_anno_list <- x$all_anno
 
     if (!usePercentage) {
-      all_snv_list$ccf <- all_snv_list$ccf / 100
+      for (i in seq_along(all_snv_list)) {
+        all_snv_list[[i]]$ccf <- all_snv_list[[i]]$ccf / 100
+      }
     }
 
     if (nrow(all_snv_list[[1]]) < 10) {
@@ -156,7 +158,7 @@ convert2SciCloneInput <-
     if (nrow(filterSNV) == 0) {
       cat("No snv is filtered\n")
     } else {
-      filterSNV <- filterSNV[!duplicated(filterSNV[, 2]),]
+      filterSNV <- filterSNV[!duplicated(filterSNV[, 2]), ]
       cat(nrow(filterSNV), "snv were filtered\n")
       print(filterSNV)
     }
@@ -171,7 +173,7 @@ convert2SciCloneInput <-
     }))
 
     all_inputList <- lapply(inputList, function(df) {
-      df[paste(df[, 3], df[, 2], sep = "_") %in% gene_pos,]
+      df[paste(df[, 3], df[, 2], sep = "_") %in% gene_pos, ]
     })
 
     all_inputList <- lapply(all_inputList, function(df) {
@@ -204,7 +206,7 @@ calcCCFDistance <- function(df) {
   # First calculate the ccf of all snvs with m=1
   x <-
     df[(df[, 6] == 1 &
-          df[, 7] == 1) | (df[, 6] == 1 & df[, 7] == 0),]
+          df[, 7] == 1) | (df[, 6] == 1 & df[, 7] == 0), ]
   x$ccf <-
     (x[, 5] / (x[, 5] + x[, 4]) * ((x[, 6] + x[, 7]) * x[, 8] + 2 * (1 - x[, 8]))) / x[, 8]
 
@@ -276,7 +278,7 @@ calcCCFThreshold <- function(df) {
 
   df$ccf <- ccf
   df$mutMulti <- m
-  df <- df[order(df[, 2]),]
+  df <- df[order(df[, 2]), ]
 
   return(df)
 }
@@ -284,9 +286,10 @@ calcCCFThreshold <- function(df) {
 
 #' Extract the Required Columns From the SC
 #' @param sc cluster result of sciclone.
+#' @param usePercentage Whether to multiply CCF by 100 to express percentage, default is FALSE.
 #' @importFrom dplyr select
 #' @importFrom stats na.omit
-extractFromSC <- function(sc) {
+extractFromSC <- function(sc, usePercentage = FALSE) {
   ccf_mat <- sc@vafs.merged |>
     select(
       chr,
@@ -300,8 +303,13 @@ extractFromSC <- function(sc) {
 
   colnames(ccf_mat) <- sub("vaf", "ccf", colnames(ccf_mat))
 
-  ccf_mat[, c(names(ccf_mat)[grepl("*.ccf", names(ccf_mat))])] <-
-    ccf_mat[, c(names(ccf_mat)[grepl("*.ccf", names(ccf_mat))])] / 100
+  if (!usePercentage) {
+    ccf_mat[, c(names(ccf_mat)[grepl("*.ccf", names(ccf_mat))])] <-
+      ccf_mat[, c(names(ccf_mat)[grepl("*.ccf", names(ccf_mat))])]
+  } else {
+    ccf_mat[, c(names(ccf_mat)[grepl("*.ccf", names(ccf_mat))])] <-
+      ccf_mat[, c(names(ccf_mat)[grepl("*.ccf", names(ccf_mat))])] / 100
+  }
 
   ccf_mat[, c(names(ccf_mat)[grepl("*.ref", names(ccf_mat))])] <-
     ccf_mat[, c(names(ccf_mat)[grepl("*.ref", names(ccf_mat))])] + ccf_mat[, c(names(ccf_mat)[grepl("*.var", names(ccf_mat))])]
@@ -313,7 +321,7 @@ extractFromSC <- function(sc) {
 
   ccf_mat <- na.omit(ccf_mat)
 
-  ccf_mat <- ccf_mat[ccf_mat$cluster != 0,]
+  ccf_mat <- ccf_mat[ccf_mat$cluster != 0, ]
 
   return(ccf_mat)
 }
@@ -450,7 +458,7 @@ postProcess <- function(clusterResult,
       removed_cluster,
       "\n"
     )
-    print(removedCluster$mat[removedCluster$mat$cluster == removed_cluster,])
+    print(removedCluster$mat[removedCluster$mat$cluster == removed_cluster, ])
   }
 
   # Merge clusters that have no statistical difference with Wilcox test
@@ -535,17 +543,17 @@ removeOut <- function(clusterResult) {
 
     # Save deleted snv
     removedf <-
-      bind_rows(removedf, clusterResult$mat[outlier_indices,])
-    removedf <- removedf[,-c(ncol(removedf) - 1, ncol(removedf))]
+      bind_rows(removedf, clusterResult$mat[outlier_indices, ])
+    removedf <- removedf[, -c(ncol(removedf) - 1, ncol(removedf))]
 
     if (length(outlier_indices) != 0) {
       clusterResult$mat <-
-        clusterResult$mat[-outlier_indices,]
+        clusterResult$mat[-outlier_indices, ]
     }
 
     clusterResult$mat <-
-      clusterResult$mat[,-c(ncol(clusterResult$mat) -
-                              1, ncol(clusterResult$mat))]
+      clusterResult$mat[, -c(ncol(clusterResult$mat) -
+                               1, ncol(clusterResult$mat))]
 
     clusterResult$mat <-
       clusterResult$mat[, c(2:ncol(clusterResult$mat), 1)]
@@ -582,7 +590,7 @@ mergeCluster <- function(clusterResult, pvalue = 0.05) {
                         exact = F)
 
           if (wilcox$p.value >= pvalue) {
-            clusterResult$mat[clusterResult$mat$cluster == j,]$cluster <-
+            clusterResult$mat[clusterResult$mat$cluster == j, ]$cluster <-
               i
             cat(
               "Cluster",
@@ -622,13 +630,13 @@ checkCloneCCF <- function(clusterResult) {
             cluster ~ sample,
             value.var = "mean")
 
-    c1 <- as.data.frame(sample_mean[sample_mean$cluster == 1,-1])
+    c1 <- as.data.frame(sample_mean[sample_mean$cluster == 1, -1])
     lable <- 0
 
     for (i in 2:ncol(sample_mean)) {
       larger <- which(sample_mean[, i] > c1[[1, i - 1]])
       if (length(larger) > 0) {
-        clusterResult$mat[clusterResult$mat$cluster == larger,]$cluster <-
+        clusterResult$mat[clusterResult$mat$cluster == larger, ]$cluster <-
           1
         # Regenerate the cluster number
         clusterResult$mat <- reClusterID(clusterResult$mat)
@@ -749,8 +757,8 @@ runSampleGroup <-
         minPresenceCCF,
         "), the following SNVs are marked as absent\n"
       )
-      print(as.data.frame(group_df[remove_index,]))
-      group_df <- group_df[!remove_index,]
+      print(as.data.frame(group_df[remove_index, ]))
+      group_df <- group_df[!remove_index, ]
     }
 
     # Delete groups with fewer mutations than minSnvNum (but not root and leaf nodes)
@@ -766,9 +774,9 @@ runSampleGroup <-
         sum(strsplit(x, "")[[1]] == "1") == 1
       })]
 
-    no_filter_label <- group_df[group_df$label %in% c(root, leaf),]
+    no_filter_label <- group_df[group_df$label %in% c(root, leaf), ]
 
-    group_df <- group_df[!group_df$label %in% c(root, leaf),]
+    group_df <- group_df[!group_df$label %in% c(root, leaf), ]
 
     group_df <- as.data.frame(group_df %>%
                                 group_by(label) |>
@@ -792,11 +800,11 @@ runSampleGroup <-
     }
 
     group_df$mean_ccf <-
-      rowSums(group_df[,-c(1:3, ncol(group_df))]) / length(sampleName)
+      rowSums(group_df[, -c(1:3, ncol(group_df))]) / length(sampleName)
     mean_ccf <- group_df %>%
       group_by(label) %>%
       summarise(meanCCF = mean(mean_ccf))
-    group_df <- group_df[,-ncol(group_df)]
+    group_df <- group_df[, -ncol(group_df)]
 
     return(list(group = group_df, meanCCF = mean_ccf))
   }
