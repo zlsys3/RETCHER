@@ -27,6 +27,7 @@
 #' default is TRUE.
 #' @param bootstrapIter The number of bootstrap iterations. the default is 2000.
 #' @param bootstrapConf The confidence interval for bootstrap. the default is 0.95.
+#' @param usePercentage Whether to multiply CCF by 100 to express percentage, default is FALSE.
 #' @param clusterMinSnvNum The minimum number of SNV in a subclone cluster.
 #' clusters with fewer SNV than this value will be removed. If you do not want
 #' to remove clusters, you can set it to 0. The default is 5.
@@ -85,6 +86,7 @@ RunPipeline <-
            useSexChrs = TRUE,
            bootstrapIter = 2000,
            bootstrapConf = 0.95,
+           usePercentage = FALSE,
            clusterMinSnvNum = 5,
            removeOutliers = TRUE,
            mergeUndiffClust = TRUE,
@@ -117,7 +119,8 @@ RunPipeline <-
         maximumClusters = maximumClusters,
         useSexChrs = useSexChrs,
         bootstrapIter = bootstrapIter,
-        bootstrapConf = bootstrapConf
+        bootstrapConf = bootstrapConf,
+        usePercentage = usePercentage
       )
 
     if (length(cluster_res) != 1) {
@@ -138,22 +141,14 @@ RunPipeline <-
       }
 
       if (!is.null(saveDir)) {
-        singleSampleDensity(
-          clusterMat = cluster_res_post$mat,
-          saveDir = paste0(saveDir, "/plot")
-        )
-        singleSampleBoxplot(
-          clusterMat = cluster_res_post$mat,
-          saveDir = paste0(saveDir, "/plot")
-        )
-        doubleSampleScatter(
-          clusterMat = cluster_res_post$mat,
-          saveDir = paste0(saveDir, "/plot")
-        )
-        allSampleLineCharts(
-          clusterCI = cluster_res_post$ci,
-          saveDir = paste0(saveDir, "/plot")
-        )
+        singleSampleDensity(clusterMat = cluster_res_post$mat,
+                            saveDir = paste0(saveDir, "/plot"))
+        singleSampleBoxplot(clusterMat = cluster_res_post$mat,
+                            saveDir = paste0(saveDir, "/plot"))
+        doubleSampleScatter(clusterMat = cluster_res_post$mat,
+                            saveDir = paste0(saveDir, "/plot"))
+        allSampleLineCharts(clusterCI = cluster_res_post$ci,
+                            saveDir = paste0(saveDir, "/plot"))
       } else {
         singleSampleDensity(clusterMat = cluster_res_post$mat)
         singleSampleBoxplot(clusterMat = cluster_res_post$mat)
@@ -181,10 +176,8 @@ RunPipeline <-
           saveDefaultTree(defaultTree, paste0(saveDir, "/tree"))
         }
         if (!is.null(saveDir)) {
-          defaultTreeGraph(
-            defaultTree = defaultTree,
-            saveDir = paste0(saveDir, "/plot")
-          )
+          defaultTreeGraph(defaultTree = defaultTree,
+                           saveDir = paste0(saveDir, "/plot"))
         } else {
           defaultTreeGraph(defaultTree = defaultTree)
         }
@@ -202,10 +195,8 @@ RunPipeline <-
 
           if (!is.null(saveDir)) {
             saveAllTree(allTree, paste0(saveDir, "/tree"))
-            allTreeGraph(
-              treeList = allTree$tree_list,
-              saveDir = paste0(saveDir, "/plot")
-            )
+            allTreeGraph(treeList = allTree$tree_list,
+                         saveDir = paste0(saveDir, "/plot"))
           } else {
             allTreeGraph(treeList = allTree$tree_list)
           }
@@ -218,9 +209,8 @@ RunPipeline <-
         if (!is.null(saveDir)) {
           saveCloneProp(prop, paste0(saveDir, "/tree"))
           plotSubcloneProp(prop,
-            position = "fill",
-            saveDir = paste0(saveDir, "/plot")
-          )
+                           position = "fill",
+                           saveDir = paste0(saveDir, "/plot"))
         } else {
           plotSubcloneProp(prop)
         }
@@ -245,10 +235,8 @@ RunPipeline <-
 
       if (is_connected(sampleTree)) {
         if (!is.null(saveDir)) {
-          sampleTreeGraph(
-            gGraph = sampleTree,
-            saveDir = paste0(saveDir, "/plot")
-          )
+          sampleTreeGraph(gGraph = sampleTree,
+                          saveDir = paste0(saveDir, "/plot"))
         } else {
           sampleTreeGraph(gGraph = sampleTree)
         }
@@ -259,10 +247,8 @@ RunPipeline <-
 
     # return
     if (length(cluster_res) == 1 && !is.null(sample_group)) {
-      return(list(
-        sample_group = sample_group,
-        sampleTree = sampleTree
-      ))
+      return(list(sample_group = sample_group,
+                  sampleTree = sampleTree))
     }
 
     if (length(cluster_res) == 1 && is.null(sample_group)) {
@@ -303,10 +289,8 @@ RunPipeline <-
         )
       )
     } else {
-      return(list(
-        cluster_res = cluster_res,
-        cluster_res_post = cluster_res_post
-      ))
+      return(list(cluster_res = cluster_res,
+                  cluster_res_post = cluster_res_post))
     }
   }
 

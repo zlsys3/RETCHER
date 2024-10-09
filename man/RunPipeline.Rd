@@ -15,6 +15,7 @@ RunPipeline(
   useSexChrs = TRUE,
   bootstrapIter = 2000,
   bootstrapConf = 0.95,
+  usePercentage = FALSE,
   clusterMinSnvNum = 5,
   removeOutliers = TRUE,
   mergeUndiffClust = TRUE,
@@ -59,6 +60,8 @@ default is TRUE.}
 \item{bootstrapIter}{The number of bootstrap iterations. the default is 2000.}
 
 \item{bootstrapConf}{The confidence interval for bootstrap. the default is 0.95.}
+
+\item{usePercentage}{Whether to multiply CCF by 100 to express percentage, default is FALSE.}
 
 \item{clusterMinSnvNum}{The minimum number of SNV in a subclone cluster.
 clusters with fewer SNV than this value will be removed. If you do not want
