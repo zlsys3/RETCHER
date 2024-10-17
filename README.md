@@ -14,6 +14,14 @@ phylogenetic trees based on the presence of mutations in samples.
 RETCHER provides a step-by-step mode for running from input files to all
 results, as well as a pipeline for quick execution.
 
+For more information about the algorithm please see the following
+publication:  
+Zhen Wang, Yanhua Fang, Ruoyu Wang, Liwen Kong, Shanshan Liang, Shuai
+Tao, Reconstructing tumor clonal heterogeneity and evolutionary
+relationships based on tumor DNA sequencing data, Briefings in
+Bioinformatics, Volume 25, Issue 6, November 2024, bbae516,
+<https://doi.org/10.1093/bib/bbae516>
+
 ## Installation
 
 The subclonal clustering part of RETCHER is based on
