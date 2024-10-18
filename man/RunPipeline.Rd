@@ -16,6 +16,7 @@ RunPipeline(
   bootstrapIter = 2000,
   bootstrapConf = 0.95,
   usePercentage = FALSE,
+  LimitCCF = TRUE,
   clusterMinSnvNum = 5,
   removeOutliers = TRUE,
   mergeUndiffClust = TRUE,
@@ -62,6 +63,8 @@ default is TRUE.}
 \item{bootstrapConf}{The confidence interval for bootstrap. the default is 0.95.}
 
 \item{usePercentage}{Whether to multiply CCF by 100 to express percentage, default is FALSE.}
+
+\item{LimitCCF}{Whether to limit CCF to 0 to 1, default is TRUE.}
 
 \item{clusterMinSnvNum}{The minimum number of SNV in a subclone cluster.
 clusters with fewer SNV than this value will be removed. If you do not want

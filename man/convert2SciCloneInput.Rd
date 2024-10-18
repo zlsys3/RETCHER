@@ -4,7 +4,12 @@
 \alias{convert2SciCloneInput}
 \title{Convert to SciClone Input Format}
 \usage{
-convert2SciCloneInput(inputList, calcCCFMethod = "distance", maxCCFValue = 1.2)
+convert2SciCloneInput(
+  inputList,
+  calcCCFMethod = "distance",
+  maxCCFValue = 1.2,
+  LimitCCF = TRUE
+)
 }
 \arguments{
 \item{inputList}{Same as 'inputList' parameter of runTumorCluster()}

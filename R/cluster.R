@@ -20,6 +20,7 @@
 #' @param bootstrapIter The number of bootstrap iterations, default is 2000.
 #' @param bootstrapConf Confidence interval for bootstrap, default is 0.95.
 #' @param usePercentage Whether to multiply CCF by 100 to express percentage, default is FALSE.
+#' @param LimitCCF Whether to limit CCF to 0 to 1, default is TRUE.
 #'
 #' @return Returns a list containing a data.frame of the clustering results,
 #' a data.frame of the confidence intervals for each subclone cluster, a list
@@ -40,15 +41,20 @@ runTumorCluster <-
            useSexChrs = TRUE,
            bootstrapIter = 2000,
            bootstrapConf = 0.95,
-           usePercentage = FALSE) {
+           usePercentage = FALSE,
+           LimitCCF = TRUE) {
     if (is.null(sampleNames)) {
       sampleNames <- names(inputList)
     }
 
     # Filter the snv of ccf > maxCCFValue and convert it to the input format of sciclone
-    x <- convert2SciCloneInput(inputList,
-                               calcCCFMethod = calcCCFMethod,
-                               maxCCFValue = maxCCFValue)
+    x <- convert2SciCloneInput(
+      inputList,
+      calcCCFMethod = calcCCFMethod,
+      maxCCFValue = maxCCFValue,
+      LimitCCF = LimitCCF
+    )
+
     all_snv_list <- x$all_snv
     all_anno_list <- x$all_anno
 
@@ -125,7 +131,8 @@ runTumorCluster <-
 convert2SciCloneInput <-
   function(inputList,
            calcCCFMethod = "distance",
-           maxCCFValue = 1.2) {
+           maxCCFValue = 1.2,
+           LimitCCF = TRUE) {
     if (any(is.na(unlist(lapply(inputList, function(x) {
       x[, 6]
     }))))) {
@@ -138,15 +145,21 @@ convert2SciCloneInput <-
     }
 
     if (calcCCFMethod == "distance") {
-      inputList <- lapply(inputList, calcCCFDistance)
+      inputList <-
+        lapply(inputList, function(x)
+          calcCCFDistance(df = x, LimitCCF = LimitCCF))
     } else if (calcCCFMethod == "threshold") {
-      inputList <- lapply(inputList, calcCCFThreshold)
+      inputList <-
+        lapply(inputList, function(x)
+          calcCCFThreshold(df = x, LimitCCF = LimitCCF))
     } else {
       cat(
         "\nParameter 'calcCCFMethod' only supports 'distance' and 'threshold',",
         "use the default parameter 'distance' now \n"
       )
-      inputList <- lapply(inputList, calcCCFDistance)
+      inputList <-
+        lapply(inputList, function(x)
+          calcCCFDistance(df = x, LimitCCF = LimitCCF))
     }
 
     # Display filtered snv
@@ -202,7 +215,7 @@ convert2SciCloneInput <-
 
 
 # Calculate mutation multiplicity based on distance and then calculate CCF
-calcCCFDistance <- function(df) {
+calcCCFDistance <- function(df, LimitCCF = TRUE) {
   # First calculate the ccf of all snvs with m=1
   x <-
     df[(df[, 6] == 1 &
@@ -262,12 +275,17 @@ calcCCFDistance <- function(df) {
                        (1 - df[, 8][i]))) / df[, 8][i] / mutMulti
     df$mutMulti[i] <- mutMulti
   }
+
+  if (LimitCCF) {
+    df$ccf <- ifelse(df$ccf > 1, 1, df$ccf)
+  }
+
   return(df)
 }
 
 
 # Calculate mutation multiplicity based on threshold and then calculate CCF
-calcCCFThreshold <- function(df) {
+calcCCFThreshold <- function(df, LimitCCF = TRUE) {
   m <- pmax(1, round(((df[, 5] / (
     df[, 5] + df[, 4]
   )) *
@@ -279,6 +297,10 @@ calcCCFThreshold <- function(df) {
   df$ccf <- ccf
   df$mutMulti <- m
   df <- df[order(df[, 2]), ]
+
+  if (LimitCCF) {
+    df$ccf <- ifelse(df$ccf > 1, 1, df$ccf)
+  }
 
   return(df)
 }

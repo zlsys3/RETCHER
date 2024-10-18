@@ -28,6 +28,7 @@
 #' @param bootstrapIter The number of bootstrap iterations. the default is 2000.
 #' @param bootstrapConf The confidence interval for bootstrap. the default is 0.95.
 #' @param usePercentage Whether to multiply CCF by 100 to express percentage, default is FALSE.
+#' @param LimitCCF Whether to limit CCF to 0 to 1, default is TRUE.
 #' @param clusterMinSnvNum The minimum number of SNV in a subclone cluster.
 #' clusters with fewer SNV than this value will be removed. If you do not want
 #' to remove clusters, you can set it to 0. The default is 5.
@@ -87,6 +88,7 @@ RunPipeline <-
            bootstrapIter = 2000,
            bootstrapConf = 0.95,
            usePercentage = FALSE,
+           LimitCCF = TRUE,
            clusterMinSnvNum = 5,
            removeOutliers = TRUE,
            mergeUndiffClust = TRUE,
@@ -120,7 +122,8 @@ RunPipeline <-
         useSexChrs = useSexChrs,
         bootstrapIter = bootstrapIter,
         bootstrapConf = bootstrapConf,
-        usePercentage = usePercentage
+        usePercentage = usePercentage,
+        LimitCCF = LimitCCF
       )
 
     if (length(cluster_res) != 1) {
