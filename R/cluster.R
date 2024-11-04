@@ -98,7 +98,7 @@ runTumorCluster <-
     cat("\nRun Time:", as.double(difftime(end_time, start_time, units = "secs")), "secs\n")
 
     # Extract relevant information from sc clustering results
-    ccf_mat <- extractFromSC(sc = sc)
+    ccf_mat <- extractFromSC(sc = sc,usePercentage = usePercentage)
 
     # Calculate confidence intervals using bootstrap
     ci <- calcCI(
