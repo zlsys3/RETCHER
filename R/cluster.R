@@ -19,7 +19,7 @@
 #' mutations on the sex chromosomes are used in the clustering process. default is TRUE.
 #' @param bootstrapIter The number of bootstrap iterations, default is 2000.
 #' @param bootstrapConf Confidence interval for bootstrap, default is 0.95.
-#' @param usePercentage Whether to multiply CCF by 100 to express percentage, default is FALSE.
+#' @param usePercentage Whether to multiply CCF by 100 to express percentage, default is TRUE
 #' @param LimitCCF Whether to limit CCF to 0 to 1, default is TRUE.
 #'
 #' @return Returns a list containing a data.frame of the clustering results,
@@ -41,7 +41,7 @@ runTumorCluster <-
            useSexChrs = TRUE,
            bootstrapIter = 2000,
            bootstrapConf = 0.95,
-           usePercentage = FALSE,
+           usePercentage = TRUE,
            LimitCCF = TRUE) {
     if (is.null(sampleNames)) {
       sampleNames <- names(inputList)
@@ -308,10 +308,10 @@ calcCCFThreshold <- function(df, LimitCCF = TRUE) {
 
 #' Extract the Required Columns From the SC
 #' @param sc cluster result of sciclone.
-#' @param usePercentage Whether to multiply CCF by 100 to express percentage, default is FALSE.
+#' @param usePercentage Whether to multiply CCF by 100 to express percentage, default is TRUE
 #' @importFrom dplyr select
 #' @importFrom stats na.omit
-extractFromSC <- function(sc, usePercentage = FALSE) {
+extractFromSC <- function(sc, usePercentage = TRUE) {
   ccf_mat <- sc@vafs.merged |>
     select(
       chr,

@@ -14,7 +14,7 @@ runTumorCluster(
   useSexChrs = TRUE,
   bootstrapIter = 2000,
   bootstrapConf = 0.95,
-  usePercentage = FALSE,
+  usePercentage = TRUE,
   LimitCCF = TRUE
 )
 }
@@ -45,7 +45,7 @@ mutations on the sex chromosomes are used in the clustering process. default is 
 
 \item{bootstrapConf}{Confidence interval for bootstrap, default is 0.95.}
 
-\item{usePercentage}{Whether to multiply CCF by 100 to express percentage, default is FALSE.}
+\item{usePercentage}{Whether to multiply CCF by 100 to express percentage, default is TRUE}
 
 \item{LimitCCF}{Whether to limit CCF to 0 to 1, default is TRUE.}
 }
